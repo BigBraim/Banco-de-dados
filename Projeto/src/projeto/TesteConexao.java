@@ -10,17 +10,17 @@ public class TesteConexao {
         try {
             // Carregar o driver JDBC
             Class.forName("com.mysql.jdbc.Driver");
-            
-            
-            String url = "jdbc:mysql://localhost:3306/escola";
+
+
+            String url = "jdbc:mysql://localhost:3307/escola";
             String usuario = "root";
-            String senha = "";
-            
+            String senha = "root";
+
             conexao = DriverManager.getConnection(url, usuario, senha);
-            
+
             System.out.println("Conexao com o banco de dados estabelecida com sucesso");
         } catch (ClassNotFoundException | SQLException ex) {
-            
+
             System.out.println("Falha na conexao com o banco de dados"+ ex.getMessage());                   
         } finally {
             if (conexao != null){
@@ -30,10 +30,10 @@ public class TesteConexao {
                     System.out.println("Falha ao fechar a conexao com o banco de dados"+ ex.getMessage());
                 }
         {
-                    
+
                 }
             }
         }
     }
-    
+
 }
