@@ -1,4 +1,3 @@
-
 package projeto;
 
 import java.awt.Color;
@@ -24,10 +23,10 @@ import javax.swing.table.DefaultTableModel;
  * @author informática
  */
 public class database extends javax.swing.JFrame {
-     
+
         byte [] pimage= null;
         String filename = null;
-    
+
     public database() {
         initComponents();
         show_user();
@@ -35,53 +34,63 @@ public class database extends javax.swing.JFrame {
         setTitle("TEST");
         this.setLocationRelativeTo(null);
     }
-    
 
-    
+
+
     Connection con1;
     PreparedStatement insert;
-    
-    public ArrayList<Aluno> userList(){
+
+
+    public ArrayList<Aluno> userList() {
         ArrayList<Aluno> userList = new ArrayList<>();
 
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
 
-            String url = "jdbc:mysql://localhost:3306/escola";
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            String url = "jdbc:mysql://localhost:3307/escola";
             String usuario = "root";
-            String senha = "";
-            
-            Connection  con = DriverManager.getConnection(url,usuario,senha);
-            String query1= "Select * From alunos";
-            Statement st= con.createStatement();
-            ResultSet rs= st.executeQuery(query1);
-            Aluno aluno;
-            while(rs.next()){
-                aluno=new Aluno(rs.getInt("id"),rs.getInt("Matrícula"),rs.getString("Nome"),rs.getString("Turma"),rs.getBytes("foto"));
+            String senha = "root";
+            Connection con = DriverManager.getConnection(url, usuario, senha);
+
+            String query1 = "SELECT * FROM alunos";
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(query1);
+
+            while (rs.next()) {
+                Aluno aluno = new Aluno(
+                    rs.getInt("id"), 
+                    rs.getInt("matricula"),
+                    rs.getString("nome"), 
+                    rs.getString("turma"), 
+                    rs.getBytes("foto")
+                );
                 userList.add(aluno);
-                
             }
-            
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return userList;
     }
-    
-    public void show_user(){
+
+    public void show_user() {
         ArrayList<Aluno> list = userList();
-        DefaultTableModel Df = (DefaultTableModel)jTable1.getModel();
-        Object[] row = new Object[4];
-        for(int i=0;i<list.size();i++){
-            
-            row[0]=list.get(i).getId();
-            row[1]=list.get(i).getNome();
-            row[2]=list.get(i).getTurma();
-            row[3]=list.get(i).getMatricula();
+        DefaultTableModel Df = (DefaultTableModel) jTable1.getModel();
+
+        Df.setRowCount(0);  
+
+        Object[] row = new Object[5]; 
+        for (int i = 0; i < list.size(); i++) {
+            row[0] = list.get(i).getId();
+            row[1] = list.get(i).getNome();
+            row[2] = list.get(i).getTurma();
+            row[3] = list.get(i).getMatricula();
+            row[4] = list.get(i).getFoto();
+
             Df.addRow(row);
-            
         }
     }
-    
+
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -107,6 +116,12 @@ public class database extends javax.swing.JFrame {
         setPreferredSize(new java.awt.Dimension(1280, 720));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
         getContentPane().add(txtNome, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 230, 270, 34));
+
+        txtMatricula.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtMatriculaActionPerformed(evt);
+            }
+        });
         getContentPane().add(txtMatricula, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 330, 270, 33));
         getContentPane().add(txtTurma, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 280, 270, 32));
 
@@ -212,8 +227,8 @@ public class database extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    
-    
+
+
     private void jAddImageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jAddImageActionPerformed
         // TODO add your handling code here:
         JFileChooser arquivo  = new JFileChooser();
@@ -244,75 +259,89 @@ public class database extends javax.swing.JFrame {
     private void jAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jAlterarActionPerformed
         // TODO add your handling code here:
 
-        try {
-            
+         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            String url = "jdbc:mysql://localhost:3306/escola";
+            String url = "jdbc:mysql://localhost:3307/escola";
             String usuario = "root";
-            String senha = "";            
+            String senha = "root";            
             Connection conexao = DriverManager.getConnection(url, usuario, senha);
+
             int row = jTable1.getSelectedRow();
-            String value = (jTable1.getModel().getValueAt(row, 0).toString());
-            
-            String sql ="UPDATE alunos set nome= ? , matrícula= ? , turma= ? , foto= ? where matrícula="+value;
+            String matricula = jTable1.getModel().getValueAt(row, 3).toString();
+
+            String sql;
+            if (pimage != null) {
+                sql = "UPDATE alunos SET nome = ?, matricula = ?, turma = ?, foto = ? WHERE matricula = ?";
+            } else {
+                sql = "UPDATE alunos SET nome = ?, matricula = ?, turma = ? WHERE matricula = ?";
+            }
+
             PreparedStatement atmt = conexao.prepareStatement(sql);
             atmt.setString(1, txtNome.getText());
-            atmt.setLong(2, Integer.parseInt(txtMatricula.getText()));
+            atmt.setLong(2, Long.parseLong(txtMatricula.getText()));
             atmt.setString(3, txtTurma.getText());
-            atmt.setBytes(4, pimage);
-            
+
+            if (pimage != null) {
+                atmt.setBytes(4, pimage);
+                atmt.setString(5, matricula);
+            } else {
+                atmt.setString(4, matricula);
+            }
+
             atmt.executeUpdate();
-            DefaultTableModel Df =(DefaultTableModel) jTable1.getModel();
+            DefaultTableModel Df = (DefaultTableModel) jTable1.getModel();
             Df.setRowCount(0);
-            
             show_user();
             atmt.close();
             conexao.close();
-        JOptionPane.showMessageDialog(this, "Aluno Atualizado");
-        
-        txtNome.setText("");
-        txtTurma.setText("");
-        txtMatricula.setText("");
-        lblImage.setIcon(null);
-        txtNome.requestFocus();
-                    
+
+            JOptionPane.showMessageDialog(this, "Aluno Atualizado");
+
+            txtNome.setText("");
+            txtTurma.setText("");
+            txtMatricula.setText("");
+            lblImage.setIcon(null);
+            txtNome.requestFocus();
+
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
     }//GEN-LAST:event_jAlterarActionPerformed
 
     private void jDeletarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jDeletarActionPerformed
-
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            String url = "jdbc:mysql://localhost:3306/escola";
+            String url = "jdbc:mysql://localhost:3307/escola";
             String usuario = "root";
-            String senha = "";
-            
+            String senha = "root";
+
             Connection conexao = DriverManager.getConnection(url, usuario, senha);
+
             int row = jTable1.getSelectedRow();
-            String value = (jTable1.getModel().getValueAt(row, 0).toString());
-            
-            String sql ="Delete From alunos where nome="+value;
+            String nome = (jTable1.getModel().getValueAt(row, 1).toString());  // Pega o nome da coluna correta
+
+            String sql = "DELETE FROM alunos WHERE nome = ?";
+
             PreparedStatement atmt = conexao.prepareStatement(sql);
-            
-            atmt.executeUpdate();
-            DefaultTableModel Df =(DefaultTableModel) jTable1.getModel();
+            atmt.setString(1, nome);
+
+        atmt.executeUpdate();
+
+            DefaultTableModel Df = (DefaultTableModel) jTable1.getModel();
             Df.setRowCount(0);
-            
             show_user();
+
             atmt.close();
             conexao.close();
-            
-                    
-        JOptionPane.showMessageDialog(this, "Aluno Deletado");
-        
-        txtNome.setText("");
-        txtTurma.setText("");
-        txtMatricula.setText("");
-        lblImage.setIcon(null);
-        txtNome.requestFocus();
-                    
+
+            JOptionPane.showMessageDialog(this, "Aluno Deletado");
+
+            txtNome.setText("");
+            txtTurma.setText("");
+            txtMatricula.setText("");
+            lblImage.setIcon(null);
+            txtNome.requestFocus();
+
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
@@ -320,22 +349,31 @@ public class database extends javax.swing.JFrame {
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         // TODO add your handling code here:
-        
+
         DefaultTableModel Df = (DefaultTableModel)jTable1.getModel();
         int selectedIndex = jTable1.getSelectedRow();
 
         txtNome.setText(Df.getValueAt(selectedIndex, 1).toString());
         txtTurma.setText(Df.getValueAt(selectedIndex, 2).toString());
         txtMatricula.setText(Df.getValueAt(selectedIndex, 3).toString());
-        
-        byte[] img = (userList().get(selectedIndex).getFoto());
-        ImageIcon image = new ImageIcon(new ImageIcon(img).getImage().getScaledInstance(lblImage.getWidth(), lblImage.getHeight(), Image.SCALE_DEFAULT));
-        lblImage.setIcon(image);
+
+        byte[] img = userList().get(selectedIndex).getFoto();
+
+        if (img != null) {
+            ImageIcon image = new ImageIcon(new ImageIcon(img).getImage().getScaledInstance(lblImage.getWidth(), lblImage.getHeight(), Image.SCALE_DEFAULT));
+            lblImage.setIcon(image);
+        } else {
+            lblImage.setIcon(null);  // Se não houver imagem, limpa o label
+        }
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void jTable1AncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_jTable1AncestorAdded
         // TODO add your handling code here:
     }//GEN-LAST:event_jTable1AncestorAdded
+
+    private void txtMatriculaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMatriculaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtMatriculaActionPerformed
 
     /**
      * @param args the command line arguments
