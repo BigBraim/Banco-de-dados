@@ -1,7 +1,3 @@
- /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package projeto;
 
 import java.sql.Statement;
@@ -31,10 +27,10 @@ import java.util.ArrayList;
  * @author Biblioteca
  */
 public class Cadastro extends javax.swing.JFrame {
-    
+
     byte [] pimage= null;
     String filename = null;
-    
+
 
 
     /**
@@ -184,33 +180,33 @@ public class Cadastro extends javax.swing.JFrame {
 
     Connection con1;
     PreparedStatement insert;
-    
+
     public ArrayList<Aluno> userList(){
         ArrayList<Aluno> userList = new ArrayList<>();
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
-            String url = "jdbc:mysql://localhost:3306/escola";
+            String url = "jdbc:mysql://localhost:3307/escola";
             String usuario = "root";
-            String senha = "";
-            
+            String senha = "root";
+
             Connection  con = DriverManager.getConnection(url,usuario,senha);
-            String query1= "Select * From alunos";
+            String query1= "SELECT * FROM alunos";
             Statement st= con.createStatement();
             ResultSet rs= st.executeQuery(query1);
             Aluno aluno;
             while(rs.next()){
-                aluno=new Aluno(rs.getInt("id"),rs.getInt("Matrícula"),rs.getString("Nome"),rs.getString("Turma"),rs.getBytes("foto"));
+                aluno=new Aluno(rs.getInt("id"),rs.getInt("Matricula"),rs.getString("Nome"),rs.getString("Turma"),rs.getBytes("foto"));
                 userList.add(aluno);
-                
+
             }
-            
+
         } catch (Exception e) {
         }
         return userList;
     }
-    
+
     public void show_user(){
         ArrayList<Aluno> list = userList();
         DefaultTableModel Df = (DefaultTableModel)jTable1.getModel();
@@ -221,107 +217,107 @@ public class Cadastro extends javax.swing.JFrame {
             row[2]=list.get(i).getTurma();
             row[3]=list.get(i).getMatricula();
             Df.addRow(row);
-            
+
         }
     }
-    
+
     private void table_update(){
-        
+
         int c;
-        
+
         try {
-            
+
         Class.forName("com.mysql.cj.jdbc.Driver");
 
-        String url = "jdbc:mysql://localhost:3306/escola"; 
+        String url = "jdbc:mysql://localhost:3307/escola"; 
         String usuario = "root"; 
-        String senha = "";
-        
+        String senha = "root";
+
         con1 = DriverManager.getConnection(url, usuario, senha);
 
         insert = con1.prepareStatement("select * from alunos");
-        
+
         ResultSet rs = insert.executeQuery();
         ResultSetMetaData Rss = rs.getMetaData();
         c = Rss.getColumnCount();
-        
+
         DefaultTableModel Df = (DefaultTableModel)jTable1.getModel();
-        
+
         Df.setRowCount(0);
-        
+
         while(rs.next()){
-            
+
             Vector v2 = new Vector();
-            
+
             for(int a=1; a<=c; a++){
                 v2.add(rs.getString("id"));
                 v2.add(rs.getString("nome"));
                 v2.add(rs.getString("turma"));
-                v2.add(rs.getString("matrícula"));
+                v2.add(rs.getString("matricula"));
                 v2.add(rs.getString("foto"));
-                
+
             }
-            
+
         Df.addRow(v2);
-            
+
         }
-        
+
 
 //Techar a conexão com o banco de dados
 
-      
+
     } catch (ClassNotFoundException | SQLException e) {
         e.printStackTrace();
     }
-        
-        
-        
-    }
-    
-    
 
-    
+
+
+    }
+
+
+
+
     private void JCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JCadastrarActionPerformed
 
-        
+
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            String url = "jdbc:mysql://localhost:3306/escola";
+            String url = "jdbc:mysql://localhost:3307/escola";
             String usuario = "root";
-            String senha = "";
+            String senha = "root";
             Connection conexao = DriverManager.getConnection(url, usuario, senha);
-            
-            String sql ="INSERT INTO alunos (nome, matrícula, turma, foto) VALUES (?, ?, ?, ?)";
+
+            String sql ="INSERT INTO alunos (nome, matricula, turma, foto) VALUES (?, ?, ?, ?)";
             PreparedStatement atmt = conexao.prepareStatement(sql);
             atmt.setString(1, txtNome.getText());
             atmt.setLong(2, Integer.parseInt(txtMatricula.getText()));
             atmt.setString(3, txtTurma.getText());
             atmt.setBytes(4, pimage);
-            
-            atmt.executeUpdate();
+
+                atmt.executeUpdate();
             DefaultTableModel Df =(DefaultTableModel) jTable1.getModel();
             Df.setRowCount(0);
             show_user();
             atmt.close();
             conexao.close();
-            
-                    
+
+
         JOptionPane.showMessageDialog(this, "Aluno Criado");
-        
+
         txtNome.setText("");
         txtTurma.setText("");
         txtMatricula.setText("");
         lblImage.setIcon(null);
         txtNome.requestFocus();
-                    
+
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
-        
-    }//GEN-LAST:event_JCadastrarActionPerformed
-            
 
-    
+    }//GEN-LAST:event_JCadastrarActionPerformed
+
+
+
     private void jAddImageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jAddImageActionPerformed
         // TODO add your handling code here:
       JFileChooser chooser =  new JFileChooser(); 
@@ -338,20 +334,22 @@ public class Cadastro extends javax.swing.JFrame {
             for(int readNum;(readNum = fis.read(buf))!=-1;){
                 bos.write(buf,0,readNum);
         }
-          
+
             pimage= bos.toByteArray();
-            
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
         }
-        
+
     }//GEN-LAST:event_jAddImageActionPerformed
 
     private void jMaisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMaisActionPerformed
         database obj = new database();
-        
+
+        table_update();
+
         obj.show();
-        
+
         dispose();
     }//GEN-LAST:event_jMaisActionPerformed
 
@@ -365,7 +363,7 @@ public class Cadastro extends javax.swing.JFrame {
         txtTurma.setText(Df.getValueAt(selectedIndex, 2).toString());
         txtMatricula.setText(Df.getValueAt(selectedIndex, 3).toString());
         txtImage.setText(Df.getValueAt(selectedIndex, 4).toString());
-        
+
         byte[] img = (userList().get(selectedIndex).getFoto());
         ImageIcon image = new ImageIcon(new ImageIcon(img).getImage().getScaledInstance(lblImage.getWidth(), lblImage.getHeight(), Image.SCALE_DEFAULT));
         lblImage.setIcon(image);
