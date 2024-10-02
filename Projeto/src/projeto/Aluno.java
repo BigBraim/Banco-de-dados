@@ -1,20 +1,21 @@
 package projeto;
 
 public class Aluno {
-    
+
     private int id;
     private String nome;
     private int matricula;
     private String turma;
     private byte[] foto;
-    
+
 
     public Aluno() {
     }
-    
-    
+
+
 
     public Aluno(int id, int matricula, String nome, String turma, byte[] foto) {
+        this.id = id;
         this.nome = nome;
         this.matricula = matricula;
         this.turma = turma;
@@ -29,8 +30,8 @@ public class Aluno {
         this.id = id;
     }
 
-    
-    
+
+
     public String getNome() {
         return nome;
     }
@@ -64,8 +65,9 @@ public class Aluno {
     }
 
 
-    
+
     public void exibirInformacoes(){
+        System.out.println("ID: "+ this.getId());
         System.out.println("Nome: "+ this.getNome());
         System.out.println("Turma: "+ this.getTurma());
         System.out.println("Matricula: "+ this.getMatricula());
@@ -75,5 +77,5 @@ public class Aluno {
     Aluno get(int selectedRow) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-    
+
 }
