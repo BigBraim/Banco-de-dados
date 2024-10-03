@@ -22,13 +22,13 @@ O projeto abrange os seguintes recursos:
 
 O projeto está organizado da seguinte forma:
 
-- **Conexão com o Banco de Dados (`DatabaseConnection.java`)**:
+- **Conexão com o Banco de Dados (`database.java`)**:
   - Contém a lógica para conectar ao banco de dados MySQL utilizando JDBC.
 
-- **Interface Gráfica (`MainFrame.java`, `LoginPanel.java`)**:
+- **Interface Gráfica (`Cadastro.java`)**:
   - As classes responsáveis por desenhar a interface gráfica, incluindo o painel de login, a tela de cadastro e a tabela de exibição de alunos.
 
-- **Manipulação de Imagens (`ImageHelper.java`)**:
+- **Manipulação de Imagens (`Cadastro.java`)**:
   - Contém métodos utilitários para redimensionar, converter e exibir imagens no formato `byte[]` para serem armazenadas no banco de dados.
 
 ### Funcionalidades
@@ -82,7 +82,7 @@ Para executar esta aplicação, siga as instruções abaixo:
      ```
 
 3. **Configurar a Conexão no Código**:
-   - Abra o arquivo de código onde a conexão com o banco de dados é estabelecida (por exemplo, `DatabaseConnection.java`).
+   - Abra o arquivo de código onde a conexão com o banco de dados é estabelecida (por exemplo, `database.java`).
    - Verifique as credenciais e a URL de conexão. As informações padrão são:
      ```java
      String url = "jdbc:mysql://localhost:3307/escola";
@@ -117,6 +117,6 @@ Meu LinkedIn: [Brayan Pletsch](https://www.linkedin.com/in/brayan-pletsch/)
 
 Meu Email: brayan.pletsch@gmail.com
 
-Meu Site: [brayan.website](https://brayan-site-vxgx.vercel.app/)
+Meu Site: [brayan.blog](https://brayan.blog/)
 
 Link do projeto: [Sistema de Cadastro de Alunos no GitHub](https://www.github.com/BigBraim/Banco-de-dados)
