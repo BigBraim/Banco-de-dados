@@ -1,5 +1,7 @@
 # Sistema de Cadastro de Alunos - Projeto em Java com MySQL
 
+https://github.com/user-attachments/assets/ec382807-bbb8-447c-85cc-4f3afa150742
+
 Este projeto foi desenvolvido durante meus estudos de Programação Orientada a Objetos (POO) em Java. A aplicação tem como objetivo ser um sistema de cadastro de alunos, utilizando `JFrame` para a interface gráfica e MySQL para armazenar os dados. Através dessa aplicação, é possível realizar operações de CRUD (Create, Read, Update e Delete) em um banco de dados local, além de permitir a inclusão de fotos dos alunos, que são armazenadas e exibidas diretamente na interface.
 
 O projeto abrange os seguintes recursos:
